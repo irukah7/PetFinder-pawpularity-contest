@@ -61,5 +61,6 @@ etc.
 * CodeのHotnessより
     * petfindder-updated-rules.ipynbをコピー&Submitすると、なんと287/2470に。
     <img src="petfinder-updates-rules.png">
+    
     * ここで行っているデータ加工・訓練を参考にすると有用な特徴量が見えてくるかも
     * petfindder-updated-rules.ipynbは英語ベースなので日本語で書き起こしてみる
