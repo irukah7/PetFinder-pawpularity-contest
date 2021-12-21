@@ -106,5 +106,13 @@ etc.
         * 32ステップごとに評価することでエポック終了時に評価するよりもいい結果が得られた
         * 学習過程でmixupを使うことでオーバーフィッティングを防げた
 
-### swin transformer
-* Transformerベースのネットワーク
+# 12/21
+* Discussion
+    * ニューラルネットワーク
+        * InputLayer
+        * Flatten
+        * Dense
+        * Dense
+        * のようなニューラルネットワークを構築するのもアリ
+    * これもわかりやすい
+        * https://www.kaggle.com/icaram/eda-cute-animal-pictures
