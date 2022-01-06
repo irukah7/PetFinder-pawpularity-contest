@@ -198,6 +198,7 @@ $$a=\sqrt{(\frac{6}{d_{i}n+d_{o}ut})}$$
 * ミニバッチSGDで学習する場合、バッチサイズが大きすぎると収束速度に影響し精度が低下する
 * 逆に小さすぎると学習が完了しない
 
+## 2022/01/06
 #### LRスケジューラ
 * 勾配降下はランダム処理する
 * バッチサイズを大きくしても勾配そのものには影響しないが分散を小さくする
@@ -211,4 +212,48 @@ ex) ベースラインのバッチサイズが256で最初のベースライン�
 * 5エポックくらいのデータmバッチを使って学習率を0から最初の学習率(適当な箇所)まで上げる必要あり
 
 #### BNアルファを0に初期化
+* 残差ブロックのBNのαを0に初期化する
+* 残差ブロックのみが入力を返すようになる
+* スタートの学習が容易になる
+
+#### 混合精度の学習
+ハードウェアがサポートしている場合は扱える無料で早く行える学習？
+
+#### ファインチューニング(微調整)
+* 学習終了後：他のすべての層が固まっている時に最後の層をさらに数回学習させる
+
+#### 検証のために1エポックでも訓練させる
+勇気の一歩。
+
+#### 学習率のコサイン減衰を利用する
+* このスケジューラは「すぐに使える」強力なスケジューラ。
+* 最適ではないが、最適を探し始めるには最適な場所?
+
+#### ラベルスムージング
+* ラベルスムージングをするとより良いモデルになる
+* PyTorchの場合は以下の損失をコピペする
+```
+from torch.nn.modules.loss import _WeightedLoss
+
+class SmoothBCEwLogits(_WeightedLoss):
+    def __init__(self, weight = None, reduction = 'mean', smoothing = 0.0, pos_weight = None):
+        super().__init__(weight=weight, reduction=reduction)
+        self.smoothing = smoothing
+        self.weight = weight
+        self.reduction = reduction
+        self.pos_weight = pos_weight
+
+    @staticmethod
+    def _smooth(targets, n_labels, smoothing = 0.0):
+        assert 0 <= smoothing < 1
+        with torch.no_grad(): targets = targets * (1.0 - smoothing) + 0.5 * smoothing
+        return targets
+
+    def forward(self, inputs, targets):
+        targets = SmoothBCEwLogits._smooth(targets, inputs.size(-1), self.smoothing)
+        loss = F.binary_cross_entropy_with_logits(inputs, targets,self.weight, pos_weight = self.pos_weight)
+        if  self.reduction == 'sum': loss = loss.sum()
+        elif  self.reduction == 'mean': loss = loss.mean()
+        return loss
+```
 
