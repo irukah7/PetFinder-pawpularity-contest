@@ -257,3 +257,21 @@ class SmoothBCEwLogits(_WeightedLoss):
         return loss
 ```
 
+# 2022/01/06
+* PyTorchを使って実装してみる
+* 手順
+1. 学習モデルに必要なライブラリのインポート
+2. GPU環境の使用
+3. サイズを統一して画像をテンソルの形にする
+4. パスを格納したリストを返す関数を作成する
+5. data.Datasetを継承したDatasetクラスの作成をする
+6. train_datasetでDatasetを受け取る
+7. train_dataloaderでデータローダーを設定する, バッチサイズを適切な数にする
+8. モデルを構築する(なるべくCNNがいいかも)
+9. 損失関数の設定
+10. epoch数を決めて学習する
+11. テンソル->画像に直して画像データを取得してみる
+
+# 2022/01/11
+https://www.kaggle.com/bibhabasumohapatra/pawpularity-part-2
+
